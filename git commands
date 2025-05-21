@@ -1,0 +1,76 @@
+Git config command
+Git config
+Get and set configuration variables that control all facets of how Git looks and operates.
+You can view all of your settings and where they are coming from using:
+$ git config --list --show-origin
+Set the name:
+$ git config --global user.name "User name"
+$ git config --global user.name "Monica"
+Set the email:
+$ git config --global user.email "gupta.monicag@gmail.com"
+Set the default editor: (here visual studio code, can have notepad.exe)
+$ git config --global core.editor Vim
+The below tells default editor VS Code to wait till the next command of git is given.
+$ git config --global core.editor "code --wait"
+Set the default branch:
+$ git config --global init.defaultbranch main
+Check the setting:
+$ git config --list
+
+
+
+Open Power Shell as Admin:
+> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+A for Yes to all
+Close PS
+
+
+
+
+
+$ mkdir Prj1
+$ cd Prj1
+Initialize Git
+$ git init
+This creates a folder .git:
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        12/4/2022   5:19 PM                hooks
+d-----        12/4/2022   5:19 PM                info
+d-----        12/4/2022   5:19 PM                objects
+d-----        12/4/2022   5:19 PM                refs
+-a----        12/4/2022   5:19 PM            130 config
+-a----        12/4/2022   5:19 PM             73 description
+-a----        12/4/2022   5:19 PM             21 HEAD
+
+
+
+
+1. Setting Up a Repository : Initializes a new Git repository in the current directory.
+git init
+2. Cloning a Repository :  Clones an existing repository into a new directory.
+git clone <repository-url>
+3. Checking Repository Status : Shows the state of the working directory and staging area.
+git status
+4. Adding Files to Staging Area : Stages changes for the next commit.
+git add <file>
+5. Committing Changes : Saves changes in the local repository.
+git commit -m "Commit message"
+6. Checking Commit History : Displays the commit history.
+git log
+7. Pushing Changes to Remote Repository : Sends local commits to the remote repository.
+git push origin main
+8. Pulling Changes from Remote Repository : Fetches and merges changes from the remote repository.
+git pull origin main
+9. Creating a New Branch : Creates a new branch named feature-branch.
+git branch feature-branch
+10. Switching Between Branches : Switches to the branch feature-branch.
+git checkout feature-branch
+11. Merging Changes : Merges the changes from feature-branch into the current branch.
+git merge feature-branch
+12. Deleting a Branch : Deletes the branch feature-branch.
+git branch -d feature-branch
+13. Stashing Changes : Temporarily saves changes without committing them.
+git stash
+14. Restoring Stashed Changes : Restores the most recent stashed changes.
+git stash pop
