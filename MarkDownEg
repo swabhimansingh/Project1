@@ -1,1 +1,23 @@
 
+Headings
+# H1 (Main Title)
+## H2 (Subheading)
+### H3 (Smaller Heading)
+Text Formatting
+*Italic*  
+**Bold**  
+~~Strikethrough~~  
+`Inline Code`
+Lists
+- Bullet Point 1
+- Bullet Point 2
+  - Sub-point
+1. Numbered Item 1
+2. Numbered Item 2
+Links & Images
+[GitHub](https://github.com)  
+![Alt Text](image.png)
+Code Blocks
+```python
+print("Hello, Markdown!")
+```
