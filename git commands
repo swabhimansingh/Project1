@@ -244,17 +244,21 @@ git branch -D feature-branch
 Step 8: Push Changes to Remote Repository
 git remote add origin https://github.com/monicag-gupta/Prj1.git
 git push -u origin main
-
+If github has main branch already having files, it will deny the pushing of same branch.
+Then, either push a different branch
+git push -u origin develop
+or push by force:
+git push --force origin main
 
 Step 9: Create and Track a Remote Branch
 git checkout -b dev-branch
 git push -u origin dev-branch
 This creates dev-branch locally and pushes it to the remote repository.
 Step 10: Delete a Remote Branch
-git push origin --delete dev-branch
+git push origin --delete develop
 This removes the dev-branch from the remote repository.
 Step 11: Rebase the Feature Branch onto Main
-git checkout feature-branch
+git checkout -b feature-branch
 git rebase main
 This applies changes from feature-branch on top of main.
 Step 12: Rename a Branch
@@ -262,3 +266,37 @@ Rename the current branch:
 git branch -m new-branch-dev
 Rename another branch:
 git branch -m new-branch-dev dev-branch
+
+
+git log --graph --oneline --decorate --all --branches > aa.txt
+git log --graph --oneline --decorate --all --branches
+
+
+Git Merge Example
+1. Create a branch and make changes:
+git checkout -b feature-Mergedlogin
+echo "Login feature" >> mergelogin.js
+git add mergelogin.js
+git commit -am "Added merged login feature"
+2. Merge it into main:
+git checkout main
+This ensures that Git creates a merge commit, even if it could have done a fast-forward merge.
+git merge --no-ff feature-Mergedlogin
+Or
+git merge --no-ff feature-Mergedlogin -m "Merge branch 'feature-branch'"
+git push origin main
+3. Check log: View Graphical History (Branching & Merging) :
+git log --graph --oneline --decorate --all --branches > Mergeaa.txt
+
+
+Git Rebase Example
+1. Create a branch and make changes:
+git checkout -b feature-relogin
+echo "Login new rebase feature" >> relogin.js
+git add relogin.js
+git commit -am "Added Rebased login feature"
+2. Rebase onto main:
+git checkout main
+ git rebase feature-relogin
+Check log: View Graphical History  :
+git log --graph --oneline --decorate --all --branches > Rebaseaa.txt
