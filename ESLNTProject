@@ -1,0 +1,27 @@
+Open Power Shell as Admin:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+A for Yes to all
+Close PS
+Go to the project folder: 
+Initialize a Node.js Project
+npm init -y
+Install ESLint
+npm install eslint --save-dev
+Set Up ESLint Configuration
+npx eslint --init
+
+
+
+npx eslint --init
+
+Answer the prompts:
+
+How would you like to use ESLint? → "To check syntax and find problems"
+Which module system? → "CommonJS"
+Which framework? → "None of these"
+Does your project use TypeScript? → "No"
+Where does your code run? → "Node"
+Do you want to use a config file? → "JSON"
+Install dependencies? → "Yes"
+
+This creates an .eslintrc.json file.
