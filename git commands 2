@@ -1,0 +1,654 @@
+Example..Steps
+
+
+Create an Initial File and Commit, Create a file called app.js and add some code:
+echo 'console.log("Hello from main branch");' > app.js
+Add and commit this file:
+git add app.js
+git commit -m "Initial commit with app.js"
+Now we have a main branch with one file.
+Create and Switch to a New Branch, Create a new branch feature-branch and switch to it:
+git checkout -b feature-branch
+Modify app.js:
+echo 'console.log("Hello from feature branch");' > app.js
+Stage and commit the changes:
+git add app.js
+git commit -m "Updated app.js in feature-branch"
+Now, we have different versions of app.js in main and feature-branch.
+
+
+
+
+
+
+
+
+
+Switch Back to Main and Modify the Same File
+Switch back to main branch:
+git checkout main
+Modify app.js:
+echo 'console.log("Hello from main branch - modified");' > app.js
+Commit the changes:
+git add app.js
+git commit -m "Updated app.js in main"
+Now, app.js is different in both main and feature-branch.
+Merge feature-branch into main, Try merging the feature-branch:
+git merge feature-branch
+Git Conflict Detected!
+You’ll see:
+warning: Cannot merge binary files: app.js (HEAD vs. feature-branch)
+Auto-merging app.js
+CONFLICT (content): Merge conflict in app.js
+Automatic merge failed; fix conflicts and then commit the result..
+
+Check the Conflict
+git status
+On branch main
+….Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+        both modified:   app.js
+…..
+Open app.js and you’ll see: (VS Code provides an intuitive interface to compare and resolve conflicts.)
+Resolve the Conflict
+Now, manually edit app.js and keep the correct version:
+Final app.js (Resolved)
+console.log("Hello from main branch - modified");
+console.log("Hello from feature branch");
+Mark Conflict as Resolved
+
+Now, stage the file:
+git add app.js
+Commit the merge:
+git commit -m "Resolved merge conflict in app.js"
+Conflict is now resolved!
+
+Verify Merge History
+Check the log:
+git log --oneline --graph --all > aa.txt
+This confirms the successful merge.
+
+Alternative: Abort the Merge
+If you want to cancel and undo the merge, run:
+git merge --abort
+This resets the repository back to before the merge.
+
+
+
+
+
+
+
+git commit --amend (Amending the Last Commit)
+Steps to Amend the Last Commit:
+1. Create and Commit feature.js:
+echo "console.log('Initial commit');" > feature.js
+git add feature.js
+git commit -m "Initial commit with feature.js"
+Modify the Commit Message or Content: 
+Let's say we realize that the commit message is incorrect or we forgot to add some changes. We want to amend it.
+Modify the files you want to change.
+For example, edit a file or add new content:
+echo "console.log('Updated feature')" >> feature.js
+2. Stage the changes:
+git add feature.js
+3. Amend the last commit:
+To set Visual Studio Code (VS Code) as your default Git editor, you can use the following command:
+git config --global core.editor "code --wait"
+Open amend of commit in VS code
+git commit --amend
+This will open your default text editor, allowing you to change the commit message if needed. The changes you made will now be part of the amended commit.
+If you just want to change the commit message (without modifying the content), you can use:
+git commit --amend --no-edit
+The --no-edit flag keeps the commit message unchanged.
+4. Push the changes (if the commit has already been pushed to a remote): 
+If you've already pushed the original commit, you'll need to force push:
+Dont run this:
+git push --force
+Be careful when force-pushing to shared repositories, as this can overwrite history for others.
+
+
+
+
+
+
+
+
+1. Create Multiple Commits: First, we’ll create three commits to practice rebase:
+echo "console.log('Commit 1');" > feature.js
+git add feature.js
+git commit -m "Commit 1"
+
+echo "console.log('Commit 2');" >> feature.js
+git add feature.js
+git commit -m "Commit 2"
+
+echo "console.log('Commit 3');" >> feature.js
+git add feature.js
+git commit -m "Commit 3"
+
+2. Check the status to identify the unstaged changes:
+git status
+This will show any modified or untracked files that need to be addressed before proceeding.
+Stash the changes (if you don't want to commit them yet): If you want to temporarily save the changes and proceed with the rebase, you can stash them:
+git stash
+This will store your changes temporarily and leave your working directory clean.
+Proceed with the Interactive Rebase: 
+Once your working directory is clean, you can proceed with the interactive rebase:
+git rebase -i HEAD~3
+
+3. Edit the Commit List: Your default editor will open with a list of commits:
+pick 1a2b3c4 Commit message 1
+pick 5d6e7f8 Commit message 2
+pick 9a0b1c2 Commit message 3
+
+
+You can change the command next to each commit:
+pick: Keep the commit as is.
+reword: Change the commit message.
+edit: Amend the commit (useful for changing files).
+squash: Combine this commit with the previous one.
+fixup: Similar to squash, but discards the commit message.
+drop: Remove the commit.
+
+
+For example, to squash the last two commits into one:
+pick 1a2b3c4 Commit message 1
+squash 5d6e7f8 Commit message 2
+pick 9a0b1c2 Commit message 3
+
+4. Save and Exit: 
+After making your changes, save and exit the editor (for example, in Vim, press Esc, type :wq, and hit Enter).
+5. Resolve Conflicts (If Any): 
+Resolve any conflicts (if necessary): If there are conflicts during the rebase, Git will prompt you to resolve them. 
+After resolving conflicts, use:
+git rebase --continue
+If there are conflicts during the rebase, Git will stop and allow you to resolve them. 
+After fixing the conflicts, stage the changes:
+git add <file>
+Then, continue the rebase:
+git rebase --continue
+6. Apply the Stashed Changes (if you stashed them): After completing the rebase, you can apply your stashed changes:
+git stash pop
+7. Force Push (If Needed): 
+If you've already pushed your changes, you may need to force push the rewritten history:
+git push --force
+
+
+
+
+
+
+
+
+Sometimes, you may accidentally lose a commit or move the branch reference to an unintended commit. 
+git reflog allows you to view and recover these lost commits.
+Steps to Recover Lost Commits:
+1. Create Commits:
+Create the first commit
+echo "console.log('Initial commit');" > feature1.js
+git add feature1.js
+git commit -m "Initial commit"
+Create a second commit
+echo "console.log('Second commit');" >> feature1.js
+git add feature1.js
+git commit -m "Second commit"
+Create a third commit
+echo "console.log('Third commit');" >> feature1.js
+git add feature1.js
+git commit -m "Third commit"
+
+2. View the Commit History
+Before we simulate a lost commit, let's check the commit history:
+git log --oneline
+Output (example commit hashes will differ):
+3024c8a (HEAD -> main) Third commit
+631218a Second commit
+8a9a2ce Initial commit
+…
+3. Delete (Lose) the Latest Commit
+Now, let’s assume we mistakenly reset to an earlier commit, losing the latest commit.
+git reset --hard HEAD~1
+HEAD is now at 631218a Second commit
+This will remove the latest commit (Third commit) from the history.
+Check the commit log again:
+git log --oneline
+Output:
+631218a (HEAD -> main) Second commit
+8a9a2ce Initial commit
+..
+The "Third commit" is gone from the history!
+
+Steps to Recover Lost Commits:
+4. View the Reflog: Recover the Lost Commit using git reflog
+At this point, Git still tracks where HEAD has moved in the past, and we can use git reflog to find the lost commit.
+The git reflog command shows the history of changes to the HEAD reference, including commits that were removed, rebased, or reset.
+git reflog
+Output (example commit hashes will differ):
+631218a (HEAD -> main) HEAD@{0}: reset: moving to HEAD~1
+e911ea1 HEAD@{1}: commit: Third commit
+631218a (HEAD -> main) HEAD@{2}: commit: Second commit
+8a9a2ce HEAD@{3}: commit: Initial commit 
+..
+The commit 3024c8a (Third commit) is still accessible via reflog.
+5. Find the Commit: 
+Look through the reflog output for the commit you want to recover. 
+Note the commit hash (e.g., 3024c8a).
+6. To restore it, simply run:
+git reset --hard e911ea1
+HEAD is now at 3024c8a Third commit
+
+7. Verify the Recovery
+Check the log again:
+git log --oneline
+Output:
+3024c8a (HEAD -> main) Third commit
+631218a Second commit
+8a9a2ce Initial commit 
+..
+The "Third commit" has been recovered successfully!
+
+
+
+
+
+
+Scenario: 
+You Are Working on a Feature, but Need to Switch Branches.
+You are working on feature-branch and made some changes, but suddenly you need to switch to main to fix a bug. 
+Instead of committing your half-done work, you can use git stash.
+
+1. Create a New Repository and Initialize Git
+mkdir git-stash-demo
+cd git-stash-demo
+git init
+
+2. Create a File and Make Some Changes
+echo "First line of code" > file.txt
+git add file.txt
+git commit -m "Initial commit"
+
+echo "New feature in progress" >> file.txt
+echo "Temporary work" >> temp.txt   # This is an untracked file
+
+At this point:
+file.txt is modified.
+temp.txt is untracked.
+
+Using Git Stash Commands:
+3. Stash the Changes
+Stash only tracked files
+git stash
+Only file.txt is stashed; temp.txt remains untracked.
+Stash tracked + untracked files
+git stash -u
+Now temp.txt is also stashed.
+Note that git stash removed temp.txt (untracked file)
+To restore back the file, use:
+git stash apply "stash@{0}"
+Stash everything (tracked, untracked, ignored)
+git stash -a
+Stash with a message
+git stash push -m "Saving work on feature"
+
+4. View the Stash List
+git stash list
+stash@{0}: WIP on feature-branch: Saving work on feature
+stash@{1}: WIP on feature-branch: auto-stash
+5. Switch to Another Branch
+git checkout main
+Now you can work on fixing the bug in main.
+6. Apply Stashed Changes
+After fixing the bug, switch back to your feature branch:
+git checkout feature-branch
+Apply the latest stash (but keep it in the stash list)
+git stash apply
+Your changes are restored.
+Apply a specific stash (without removing it)
+git stash apply stash@{0}
+Pop the stash (apply and remove it)
+git stash pop
+This applies and removes the stash.
+
+
+7. Dropping and Clearing Stashes
+Drop a specific stash
+git stash drop "stash@{0}"
+Clear all stashes
+git stash clear
+Final Cleanup
+git stash list  # Verify if any stashes are left
+8. Restoring Individual Files
+If you only need to restore a single file from the stash:
+git checkout "stash@{0}" -- file.txt
+9. Create a New Branch from a Stash
+If your work is significant and needs its own branch:
+git stash branch new-feature-branch
+This creates new-feature-branch and applies the stash.
+
+
+
+
+Stashing Selectively (--patch):
+
+Commit all previous work:
+git add .
+git commit -m "Initial commit"
+git diff
+No output expected
+Create a file and commit it: 
+Create a new file  in VS Code: 
+example.txt
+Add lines to it:
+Line 1: Initial content
+Line 2: Stable version 
+Save the file
+git add example.txt
+git commit -m "Initial commit with example.txt"
+
+Make Changes to the File
+Modify the file: Add the lines
+Line 3: First change
+Line 4: Second change
+Save the file
+Check the changes:
+git diff
+Expected output:
+diff --git a/example.txt b/example.txt
+index fe58729..b7f45f7 100644
+--- a/example.txt
++++ b/example.txt
+@@ -1,2 +1,4 @@
+ Line 1: Initial content
+-Line 2: Stable version
+\ No newline at end of file
++Line 2: Stable version^M
++Line 3: First change^M
++Line 4: Second change
+\ No newline at end of file
+Stash Only Selected Changes
+git stash --patch
+Git will interactively ask you about each change:
+diff --git a/example.txt b/example.txt
+..
+\ No newline at end of file
+(1/1) Stash this hunk [y,n,q,a,d,e,p,?]?
+Here’s a breakdown of what each option does:
+y: Yes – Stash the current hunk of changes (accept the changes).
+n: No – Do not stash the current hunk of changes (skip this hunk).
+q: Quit – Exit the stashing process and don't stash any changes.
+a: All – Stash all the changes in the file (i.e., all hunks). This will automatically accept all changes in the file.
+d: Done – Stop stashing after the current hunk. This can be used when you've finished selecting which hunks to stash.
+e: Edit – Open the current hunk in an editor to modify what changes will be stashed. You can manually select or remove parts of the changes.
+p: Patch – Allow you to interactively select specific lines to stash. This will let you decide which specific lines from the current hunk to keep.
+For this example, press y to stash only the first hunk.
+Output:
+Saved working directory and index state WIP on main: 2f131e6 Initial commit with example.txt
+Check the stash list:
+git stash list
+Confirm only selected changes were stashed.
+stash@{0}: WIP on main: 2f131e6 Initial commit with example.txt
+Confirm the file status:
+git status
+Output:
+PS C:\Users\monica\Desktop\Egs\GitEgs111> git status
+On branch main
+Your branch is ahead of 'origin/main' by 14 commits.
+  (use "git push" to publish your local commits)
+nothing to commit, working tree clean
+Check the remaining unstashed changes:
+git diff
+Output: nothing
+Apply or Pop the Stash
+Apply the stash (keep it in the stash list):
+git stash apply
+Apply and remove the stash from the list:
+git stash pop
+Clean Up
+If you no longer need the stash:
+In Linux:
+git stash drop stash@{0}
+In Windows Power Shell:
+git stash drop stash@`{0`}
+To remove all stashes:
+git stash clear
+
+
+Create a New File and Commit It
+echo "Initial content" > myfile.txt
+git add myfile.txt
+git commit -m "Initial commit with myfile.txt"
+Modify the File Without Committing
+echo "New changes" >> myfile.txt
+Stash myfile.txt
+git stash push -m "Stashing only myfile.txt" -- myfile.txt
+The -m option gives the stash a message.
+The -- myfile.txt ensures only this file is stashed.
+Output
+Saved working directory and index state On main: Stashing only myfile.txt
+
+
+
+
+Check What Will Be Removed (Dry Run)
+Before removing anything, it's a good practice to preview what will be deleted:
+git clean -n
+This lists the untracked files that would be deleted without actually deleting them.
+Remove Untracked Files
+To actually delete untracked files:
+git clean -f
+-f (force) is required to actually delete the files.
+Remove Untracked Directories
+If you also want to remove untracked directories (folders), use:
+git clean -fd
+-d removes untracked directories.
+
+Remove Ignored Files
+If you want to remove only ignored files (files listed in .gitignore):
+git clean -fX
+-X removes only ignored files.
+Remove Ignored and Untracked Files
+To remove both ignored and untracked files, use:
+git clean -fdx
+-x removes all untracked files, including those ignored by .gitignore.
+Interactive Mode
+If you want to review and confirm each file before deletion:
+git clean -i
+This will give you options like deleting specific files, skipping some, etc.
+
+
+
+Create Some Files
+echo "Tracked file" > tracked1.txt
+echo "Untracked file" > untracked1.txt
+mkdir temp-folder
+echo "Ignored file" > temp-folder/ignored.txt
+echo "temp-folder/" > .gitignore
+Add and Commit the Tracked File
+git add tracked1.txt .gitignore
+git commit -m "Initial commit with tracked1.txt and .gitignore"
+Check Status
+git status
+You will see untracked1.txt and temp-folder/ as untracked.
+Remove Untracked Files
+git clean -f
+This removes untracked1.txt, but not temp-folder/.
+Output: Removing untracked1.txt
+Remove Untracked Directories
+git clean -fd
+Now, temp-folder/ is also deleted.
+Output: Removing temp-folder/
+Remove Ignored Files
+git clean -fX
+This removes only files that match .gitignore, leaving other untracked files.
+Remove Everything (Untracked + Ignored)
+git clean -fdx
+This will remove everything that is not tracked by Git.
+
+
+Cherry-picking allows you to apply a specific commit from one branch to another without merging the entire branch
+
+If the commit being cherry-picked conflicts with existing changes in the branch, Git will pause and indicate the conflicts.
+Steps to resolve conflicts:
+1. Check conflicting files:
+git status
+2. Manually resolve conflicts in the files.
+3. Mark as resolved and continue cherry-picking:
+git add <resolved-file>
+git cherry-pick --continue
+4. If you want to abort the cherry-pick:
+git cherry-pick --abort
+
+
+Example: Git Cherry-Picking
+Say we have two branches:
+bugfix-branch – Contains commits that introduce a bug fix.
+main – The primary branch where only selected commits should be added.
+
+1. Create and Switch to a Bugfix Branch
+git checkout -b bugfix-branch
+Switched to a new branch 'bugfix-branch'
+Now, create a few commits in the bugfix-branch:
+echo "New Feature A" > featureA.txt
+git add featureA.txt
+git commit -m "Added New Feature A"
+
+echo "New Feature B" > featureB.txt
+git add featureB.txt
+git commit -m "Added New Feature B"
+
+echo "Critical Bug Fix" > bugfix.txt
+git add bugfix.txt
+git commit -m "Fixed a critical bug"
+
+Now, bugfix-branch has three commits.
+
+
+2. Switch to the main Branch
+git checkout main
+At this point, main does not have the commits from bugfix-branch.
+
+3. List the Commit History
+To find the commit hashes:
+git log --oneline --graph --all
+Example output:
+* eae42a4 (bugfix-branch) Fixed a critical bug
+* 1e257cf Added New Feature B
+* ae60826 Added New Feature A
+..
+* 449394e (HEAD -> main) Initial commit with myfile.txt
+..
+We want to cherry-pick only the "Fixed a critical bug" commit (eae42a4).
+
+4. Cherry-Picking a Specific Commit
+git cherry-pick a371325
+This applies the commit "Fixed a critical bug" to the main branch.
+5. Resolve Conflicts (If Any)
+If there's a conflict, Git will pause the process and show a message:
+error: conflict in bugfix.txt
+To resolve:
+i. Open the conflicting file (bugfix.txt) and manually fix the conflict.
+ii. Mark the conflict as resolved:
+git add bugfix.txt
+iii. Continue the cherry-pick:
+git cherry-pick --continue
+iv. To abort the cherry-pick:
+git cherry-pick --abort
+
+6. Verify the Cherry-Pick
+Check the commit history:
+git log --oneline --graph --all
+Expected output:
+* a472f86 (HEAD -> main) Fixed a critical bug
+| * eae42a4 (bugfix-branch) Fixed a critical bug
+| * 1e257cf Added New Feature B
+..
+* 449394e Initial commit with myfile.txt
+..
+Only the "Fixed a critical bug" commit was applied, leaving out the other feature commits.
+Step 7: Push the Changes to Remote (Optional)
+If you want to push the changes to the remote repository:
+git push origin main
+
+
+
+Example: Git Tags: Lightweight vs. Annotated
+
+1. Create a New Repository (or Use an Existing One)
+If you don’t have a repository, create one:
+git checkout -b git-tag-demo
+
+Create a file and make some commits:
+
+echo "Version 1" > version.txt
+git add version.txt
+git commit -m "Initial commit - Version 1"
+
+echo "Version 2" > version.txt
+git add version.txt
+git commit -m "Update to Version 2"
+
+echo "Version 3" > version.txt
+git add version.txt
+git commit -m "Update to Version 3"
+
+
+2. Create a Lightweight Tag
+A lightweight tag is just a pointer to a commit.
+git tag v1.0
+Check the tag:
+git show v1.0
+This will display the commit associated with v1.0.
+3. Create an Annotated Tag
+Annotated tags store additional metadata like the author's name, email, date, and a message.
+git tag -a v2.0 -m "Release version 2.0"
+View the tag details:
+git show v2.0
+You will see the tag message and commit details.
+
+Listing and Deleting Tags
+List all tags:
+git tag
+Delete a local tag:
+git tag -d v1.0.0
+Delete a remote tag:
+git push origin --delete tag v1.0.0
+Pushing Tags to Remote Repository
+git push origin v1.0.0
+To push all tags:
+git push --tags
+
+
+4. List All Tags
+git tag
+This lists all tags in the repository.
+To filter tags by a pattern (e.g., v1.x):
+git tag -l "v1.*"
+
+5. Push Tags to a Remote Repository
+By default, Git does not push tags when using git push. You must explicitly push them:
+git push origin v2.0
+To push all tags:
+git push --tags
+
+6. Delete a Tag
+To delete a local tag:
+git tag -d v1.0
+To delete a remote tag:
+git push --delete origin v1.0
+
+
+Tags are widely used for versioning software releases. After tagging a release, you can:
+Create a release branch from a tag:
+git checkout -b release-1.0 v1.0.0
+Check out a specific version of the project:
+git checkout v1.0.0
+Generate release archives:
+git archive --format=zip --output=v1.0.0.zip v1.0.0
+
+7. Checkout a Specific Tag (Create a Detached HEAD)
+If you want to check out a previous version:
+git checkout v2.0
+Note: This puts you in a detached HEAD state, meaning any new commits won’t be part of any branch.
+To create a new branch from a tag:
+git checkout -b release-2.0 v2.0
