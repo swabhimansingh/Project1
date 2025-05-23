@@ -1,1 +1,15 @@
+Adding a Submodule
+To add an external repository as a submodule:
+git submodule add <repository-url> <submodule-path>
+Example:
+git submodule add https://github.com/monicag-gupta/library4Git.git libs/library
+This creates a new folder libs/library, linking it to the external Git repository.
 
+Initializing and Cloning a Repository with Submodules
+When you clone a repository that contains submodules, you need to initialize them:
+git submodule init
+git submodule update
+Alternatively, you can clone a repository along with its submodules in one step:
+git clone --recurse-submodules <repository-url>
+Example:
+git clone --recurse-submodules https://github.com/monicag-gupta/library4Git.git
