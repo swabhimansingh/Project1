@@ -1,1 +1,14 @@
 
+Add the remote and name it origin
+git remote add origin https://github.com/monicag-gupta/gitAristrocat.git
+Now origin is created as the name for your remote repository.
+Verify it
+git remote -v
+origin  https://github.com/monicag-gupta/gitAristrocat.git (fetch)
+origin  https://github.com/monicag-gupta/gitAristrocat.git (push)
+If origin already exists and you want to change it
+git remote set-url origin https://github.com/username/newrepo.git
+git remote set-url origin https://github.com/monicag-gupta/NewRepoAris.git
+If you need to remove and re-add
+git remote remove origin
+git remote add origin <new-url>
