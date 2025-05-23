@@ -1,0 +1,41 @@
+Creating a GitHub Project:
+
+From a Repository:
+Go to the repo → Click on the Projects tab.
+Click New project.
+Choose Project (Beta) or classic (Beta is more flexible).
+Select a template: Board, Table, or Timeline.
+From Organization:
+Go to your GitHub Organization page.
+Click Projects → New project.
+
+
+Ways to Add:
+Directly from an Issue: Open an issue → Right sidebar → “Projects” → Select a project
+From within the Project: Click “+ Add item” → Search or paste issue link
+Automation: Add items via rules (e.g., “If label bug is added → move to project”)
+
+
+
+GitHub Issues are:
+Bug reports
+Feature requests
+Tasks or user stories
+Each issue can include:
+Title
+Description
+Assignees
+Labels
+Milestones
+Linked Pull Requests
+Projects lets you visualize the status and progress of issues in one place.
+
+
+
+You can add automation rules like:
+Move issue to “In Progress” when assigned
+Move issue to “Done” when PR is merged
+Set status when label is added
+Example:
+Trigger: New Issue Created
+Action: Add to Project → Status: Backlog
