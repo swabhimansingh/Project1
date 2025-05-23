@@ -25,3 +25,244 @@ Do you want to use a config file? → "JSON"
 Install dependencies? → "Yes"
 
 This creates an .eslintrc.json file.
+
+
+
+
+For ESLint activation: Edit:eslint.config.mjs
+
+// import { defineConfig } from "eslint/config";
+// import globals from "globals";
+// import js from "@eslint/js";
+
+
+// export default defineConfig([
+//   { files: ["**/*.{js,mjs,cjs}"] },
+//   { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.browser } },
+//   { files: ["**/*.{js,mjs,cjs}"], plugins: { js }, extends: ["js/recommended"] },
+// ]);
+
+
+
+
+import { defineConfig } from "eslint/config";
+import js from "@eslint/js"; 
+import globals from "globals";
+
+export default defineConfig([
+  {
+    files: ["**/*.{js,mjs,cjs}"],
+    languageOptions: { 
+      globals: globals.browser 
+    },
+    rules: {
+      //"no-console": "error",
+      "semi": ["error", "always"],
+      //"quotes": ["error", "double"]
+    },
+    extends: [js.configs.recommended] // Correct way to extend rules
+  }
+]);
+
+
+Create a file index.js inside current folder with an intentional ESLint error:
+let x = 10
+console.log(x)
+Missing semicolons will trigger an ESLint error.
+
+
+
+Git hooks are stored in the .git/hooks/ directory within a repository. 
+To enable a hook:
+Navigate to .git/hooks/
+Rename a sample hook (pre-commit.sample → pre-commit)
+Make it executable (chmod +x pre-commit) (attrib +x .\pre-commit)
+Add a script inside (e.g., checking code formatting)
+Example of a pre-commit hook that runs ESLint before committing:
+
+
+#!/bin/sh
+# npx eslint . --fix
+npx eslint .
+if [ $? -ne 0 ]; then
+  echo "ESLint check failed. Fix the errors before committing."
+  exit 1
+fi
+
+
+
+Try Committing the File
+git add index.js
+git commit -m "Test ESLint pre-commit hook"
+Expected Output:
+Running ESLint before commit...
+C:\Users\monica\Desktop\Egs\GitEgs111\index.js
+   1:11  error  Missing semicolon  semi
+…
+Fix the issues, then retry the commit.
+
+
+
+
+
+
+
+
+pre-commit Hook (Linting before Commit)
+#!/bin/sh
+echo "Running ESLint before commit..."
+
+# Run ESLint on all staged JS files
+git diff --cached --name-only --diff-filter=ACM | grep '\.js$' | xargs npx eslint
+
+if [ $? -ne 0 ]; then
+  echo "❌ ESLint found issues. Fix them before committing."
+  exit 1
+fi
+
+echo "✅ ESLint checks passed!"
+exit 0
+
+
+
+
+
+
+The commit-msg hook ensures that the commit message follows a specific format, such as including a Jira ticket ID.
+Steps:
+1. Create a commit-msg file in the .git/hooks/ directory (rename commit-msg.sample to commit-msg).
+2. Add the following script to ensure commit messages start with a ticket ID:
+#!/bin/sh
+echo "Checking commit message format..."
+# Check if the commit message starts with a Jira ticket (e.g., ABC-123)
+if ! grep -qE '^[A-Z]+-[0-9]+:' "$1"; then
+  echo "Error: Commit message must start with a ticket ID (e.g., ABC-123: Fix issue)"
+  exit 1
+fi
+3. Make it executable:
+chmod +x commit-msg
+Now, commits that don't start with a Jira ticket ID will be rejected.
+
+
+
+
+
+The pre-push hook is triggered before changes are pushed to a remote repository. You can use this hook to run tests and prevent pushing if they fail.
+Steps:
+1. Create a pre-push file in the .git/hooks/ directory (rename pre-push.sample to pre-push).
+2. Add the following script to run tests:
+#!/bin/sh
+echo "Running tests before push..."
+# Run tests
+npm test
+# If tests fail (exit code not 0), prevent push
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Push canceled."
+  exit 1
+fi
+3. Make it executable:
+chmod +x pre-push
+Now, if the tests fail, the pre-push hook will prevent the push.
+
+
+
+
+Open Power Shell as Admin:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+A for Yes to all
+Close PS
+Go to the project folder: 
+Initialize Git:
+git init
+Initialize a Node.js Project
+npm init -y
+Install ESLint
+npm install eslint --save-dev
+Set Up ESLint Configuration
+npx eslint --init
+
+
+
+For ESLint activation: Edit:eslint.config.mjs:
+
+// import { defineConfig } from "eslint/config";
+// import globals from "globals";
+// import js from "@eslint/js";
+
+
+// export default defineConfig([
+//   { files: ["**/*.{js,mjs,cjs}"] },
+//   { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.browser } },
+//   { files: ["**/*.{js,mjs,cjs}"], plugins: { js }, extends: ["js/recommended"] },
+// ]);
+
+
+
+
+import { defineConfig } from "eslint/config";
+import js from "@eslint/js"; 
+import globals from "globals";
+
+export default defineConfig([
+  {
+    files: ["**/*.{js,mjs,cjs}"],
+    languageOptions: { 
+      globals: globals.browser 
+    },
+    rules: {
+      //"no-console": "error",
+      "semi": ["error", "always"],
+      //"quotes": ["error", "double"]
+    },
+    extends: [js.configs.recommended] // Correct way to extend rules
+  }
+]);
+
+
+
+Install Husky as a development dependency:
+npm install husky --save-dev
+Enable Husky in the project:
+npx husky init
+Open package.json File
+In your project folder, open package.json and look for the scripts section.
+Add the prepare Script
+If it's missing, add the following under the "scripts" section of your package.json:
+"scripts": {
+  "prepare": "husky"
+}
+Now run the following command again:
+npm run prepare
+✅ This ensures Husky is set up whenever dependencies are installed.
+
+
+
+1. Add a Pre-Commit Hook
+If you haven’t already added a pre-commit hook, do it now:
+npx husky add .husky/pre-commit "echo '✅ Husky Pre-Commit Hook Triggered!'"
+OR Add the code to pre-commit in .husky/_/pre-commit:
+# echo '? Husky Pre-Commit Hook Triggered!'
+#!/usr/bin/env sh
+echo '? Husky Pre-Commit Hook Triggered!'
+# . "$(dirname "$0")/h"
+npx eslint .
+
+
+
+
+
+git add .husky/_/pre-commit
+git add .\.husky\_\pre-commit
+2. Create a Test File
+Create a simple JavaScript file:
+echo "console.log('Hello World');" > test.js
+
+3. Try Committing
+git add .
+git commit -m "Testing Husky"
+Expected Output:
+? Husky Pre-Commit Hook Triggered!
+On branch main
+Your branch is ahead of 'origin/main' by 4 commits.
+  (use "git push" to publish your local commits)
+nothing to commit, working tree clean
