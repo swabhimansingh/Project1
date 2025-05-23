@@ -335,3 +335,63 @@ Click the Fork button (top-right) to create a copy under your GitHub account.
 Your forked repository will be available at: https://github.com/your-username/sample-project
 Example:
 https://github.com/monicag-gupta/markdown-it.github.io
+
+
+
+
+Open your terminal and run:
+git clone https://github.com/your-username/sample-project.git
+cd sample-project
+
+Example:
+git clone https://github.com/monicag-gupta/markdown-it.github.io.git
+cd .\markdown-it.github.io\
+
+
+By default, origin points to your fork. To fetch the latest changes from the original repository, you need to add it as an upstream remote.
+git remote add upstream https://github.com/original-author/sample-project.git
+Example:
+git remote add upstream https://github.com/monicag-gupta/gitAristrocat.git
+Verify remotes:
+git remote -v
+Expected output:
+origin  https://github.com/monicag-gupta/markdown-it.github.io.git (fetch)
+origin  https://github.com/monicag-gupta/markdown-it.github.io.git (push) 
+upstream        https://github.com/monicag-gupta/gitAristrocat.git (fetch)
+upstream        https://github.com/monicag-gupta/gitAristrocat.git (push) 
+
+
+
+Always create a new branch before making changes.
+git checkout -b feature-adding-hello
+
+
+
+Modify/Create a file, for example, test.js:
+console.log("Hello, Open Source World!");
+Now commit and push:
+git add test.js
+git commit -m "Added a greeting message"
+git push origin feature-adding-hello
+
+
+
+Before creating a PR, ensure your fork is up-to-date.
+Fetch the latest changes from upstream
+git fetch upstream
+Merge changes into your local branch
+git checkout main
+git merge upstream/main
+git push origin main
+If there are merge conflicts, resolve them manually.
+
+
+
+Go to your fork on GitHub:
+https://github.com/your-username/sample-project
+Example:
+https://github.com/monicag-gupta/markdown-it.github.io
+Click "Compare & pull request".
+Ensure the PR targets the main branch of the original repository.
+Write a meaningful title and description.
+Click "Create pull request".
