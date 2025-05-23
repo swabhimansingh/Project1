@@ -240,7 +240,8 @@ npm run prepare
 1. Add a Pre-Commit Hook
 If you haven’t already added a pre-commit hook, do it now:
 npx husky add .husky/pre-commit "echo '✅ Husky Pre-Commit Hook Triggered!'"
-OR Add the code to pre-commit in .husky/_/pre-commit:
+OR Add the code to pre-commit in .husky/pre-commit:
+
 # echo '? Husky Pre-Commit Hook Triggered!'
 #!/usr/bin/env sh
 echo '? Husky Pre-Commit Hook Triggered!'
@@ -251,16 +252,36 @@ npx eslint .
 
 
 
-git add .husky/_/pre-commit
-git add .\.husky\_\pre-commit
+git add .
+
 2. Create a Test File
 Create a simple JavaScript file:
-echo "console.log('Hello World');" > test.js
+index.js:
+
+let x = 10
+console.log(x)
+
+
 
 3. Try Committing
 git add .
 git commit -m "Testing Husky"
+
 Expected Output:
+
+
+? Husky Pre-Commit Hook Triggered!
+
+C:\Users\Monica\Desktop\EgsGit\Prj3\index.js
+  1:11  error  Missing semicolon  semi
+  2:15  error  Missing semicolon  semi
+
+✖ 2 problems (2 errors, 0 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+
+
+Rectify index.js, re-run:
+
 ? Husky Pre-Commit Hook Triggered!
 On branch main
 Your branch is ahead of 'origin/main' by 4 commits.
