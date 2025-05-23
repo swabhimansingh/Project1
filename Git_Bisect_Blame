@@ -1,0 +1,244 @@
+Example : git bisect
+
+Scenario:
+You have a bug in your project. 
+You're maintaining a simple index.html website. 
+At some point, the page breaks — a certain element disappears or a link stops working — but you're not sure which commit caused it. 
+You’ll use git bisect to find the buggy commit.
+
+1. Initialize a New Project
+mkdir bisect-html
+cd bisect-html
+git init
+2. Create an Initial Working HTML File
+index.html
+Save and commit:
+git add index.html
+git commit -m "Initial working version of index.html"
+
+
+
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Site</title>
+</head>
+<body>
+  <h1>Welcome to My Website</h1>
+  <a href="contact.html">Contact Us</a>
+</body>
+</html>
+
+
+
+
+3. Make a Few Good Changes
+echo "<!-- About page added -->" >> index.html
+Or Open your index.html file in the editor. Scroll to the bottom of the file.
+Add this line:
+<!-- About page added -->
+Save the file (Ctrl + S or Cmd + S).
+git commit -am "Add comment about About page"
+echo "<footer>All rights reserved.</footer>" >> index.html
+Or Open index.html in VS Code. Scroll to the bottom of the file.
+Add this line right before the closing </body> tag (for proper HTML structure):
+<footer>All rights reserved.</footer>
+Save the file (Ctrl + S or Cmd + S).
+git commit -am "Add footer to the page"
+The page still works. Tag this version:
+git tag v1.0
+
+
+
+4. Introduce a Bug
+You accidentally remove the contact link in a later commit:
+sed -i '/Contact Us/d' index.html
+Or Open index.html in VS Code. Locate the line:
+<a href="contact.html">Contact Us</a>
+Delete the line. Save the file.
+git commit -am "Remove contact link by mistake"
+Then make another unrelated edit:
+echo "<p>New feature coming soon!</p>" >> index.html
+Or Open your index.html file.
+Scroll to where you want the message — ideally before </body>.
+Add:
+<p>New feature coming soon!</p>
+Save the file (Ctrl + S / Cmd + S).
+git commit -am "Add announcement"
+
+
+
+
+5. Check That the Bug Exists
+The contact link is missing:
+cat index.html | grep "Contact Us"  # Returns nothing
+Or
+Select-String -Path "index.html" -Pattern "Contact Us"
+OR
+cat index.html | findstr "Contact Us"
+6. Use git bisect to Find the Bug
+git bisect start
+git bisect bad                # Current (buggy) commit
+git bisect good v1.0          # Last known good commit
+Git checks out a commit in the middle of the history.
+
+
+
+
+7. Test the Commit
+Run:
+cat index.html | grep "Contact Us"
+Or
+Select-String -Path "index.html" -Pattern "Contact Us"
+OR
+cat index.html | findstr "Contact Us"
+If you see the link:
+git bisect good
+If it’s missing:
+git bisect bad
+Repeat this until Git shows:
+<commit-hash> is the first bad commit
+8. Reset the Bisect
+git bisect reset
+
+
+
+Optional: Automate It with a Script:
+
+test.sh
+#!/bin/bash
+if grep -q "Contact Us" index.html; then
+  exit 0  # Good
+else
+  exit 1  # Bad
+fi
+Make it executable:
+chmod +x test.sh
+Then run:
+git bisect start
+git bisect bad
+git bisect good v1.0
+git bisect run ./test.sh
+Git will automatically test all commits until it finds the first bad one!
+
+
+
+
+
+Analyzing history with git blame 
+
+Analyzing history using git blame: 
+git blame provides a super useful command when you're debugging or just trying to figure out who changed what and when in your code.
+git blame shows you:
+Line-by-line changes of a file
+Who made each change
+When they made it
+What the commit hash was
+
+Basic Syntax
+git blame [options] <file>
+This outputs each line of the file, prefixed with:
+Commit hash, Author, Date, Line content
+
+Example:
+git blame index.html
+
+
+Output:
+git blame index.html
+
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530  1) <!-- index.html -->
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530  2) <!DOCTYPE html>
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530  3) <html>
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530  4) <head>
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530  5)   <title>My Site</title>
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530  6) </head>
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530  7) <body>
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530  8)   <h1>Welcome to My Website</h1>
+6676803b (Monica Gupta 2025-04-06 12:30:51 +0530  9)
+1f691b7e (Monica Gupta 2025-04-06 12:00:52 +0530 10)   <footer>All rights reserved.</footer>
+17125f08 (Monica Gupta 2025-04-06 12:31:56 +0530 11)   <p>New feature coming soon!</p>
+1f691b7e (Monica Gupta 2025-04-06 12:00:52 +0530 12)
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530 13) </body>
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530 14) </html>
+2039eaa7 (Monica Gupta 2025-04-06 11:58:14 +0530 15) <!-- About page added -->
+^a45b307 (Monica Gupta 2025-04-06 11:51:53 +0530 16)
+
+
+
+
+
+Limit to specific lines
+git blame -L 5,8 index.html
+This shows blame info for lines 5 to 8 only.
+Ignore whitespace-only changes
+git blame -w index.html
+This ignores commits where only whitespace was changed, like indentation or trailing spaces.
+Blame since a specific revision
+git blame HEAD~2 index.html
+Only shows blame starting from 2 commits ago.
+Reverse blame (experimental)
+git blame --reverse HEAD~3..HEAD index.html
+Shows the first commit that added lines in that range (not who last modified them). Useful to trace origin.
+Only show lines changed by a specific author
+git blame --author="Monica Gupta" index.html
+Shows only the lines where Monica Gupta is the last person to touch them.
+
+
+
+
+Show commits in raw format (with filenames)
+git blame --porcelain index.html
+Outputs detailed blame info in a parseable format — great for scripting.
+See commits affecting a function (code)
+For code (e.g., .js, .py), this works better:
+git blame -L :someFunction:script.js
+Tip: Combine with git show or git log
+Take a hash from git blame output:
+git log --oneline
+git show 2039eaa 
+To see the exact commit that introduced that change.
+
+
+
+
+
+Git LOG:
+
+
+The git log command shows the commit history of your repository — who made changes, when, and what was changed.
+Basic Command
+git log
+This shows each commit with:
+Commit hash (SHA)
+Author name and email
+Commit date
+Commit message
+Real-World Uses:
+
+1. One-line summary of commits
+git log --oneline
+2. Visualize branch history
+git log --oneline --graph --all
+Visualizes branching and merging history using ASCII art.
+3. Filter by author
+git log --author="Monica Gupta"
+Shows only commits made by Monica Gupta.
+4. Show commits affecting a specific file
+git log index.html
+Great for tracing the history of a specific file.
+5. Show changed files in each commit
+git log --stat
+This adds a summary of what files changed and how many lines were added or removed.
+
+6. Filter by date
+git log --since="2025-04-01"
+Or:
+git log --after="2025-04-01" --before="2025-04-05"
+7. Show full patch (diff) with each commit
+git log -p
+Each commit includes the actual line-by-line changes made.
+8. Custom format output
+git log --pretty=format:"%h - %an, %ar : %s"
+Shows: Short hash, Author name, How long ago, Commit message
