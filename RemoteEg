@@ -1,3 +1,4 @@
+
 Add the remote and name it origin
 git remote add origin https://github.com/monicag-gupta/Prj1.git
 Now origin is created as the name for your remote repository.
@@ -395,3 +396,107 @@ Click "Compare & pull request".
 Ensure the PR targets the main branch of the original repository.
 Write a meaningful title and description.
 Click "Create pull request".
+
+
+
+This is useful when contributing to multiple repositories or collaborating on forks.
+Adding and Using Multiple Remotes
+1. Check Existing Remotes
+git remote -v
+2. Add Another Remote
+git remote add team-member https://github.com/team-member/repo.git
+3. Fetch Changes from Different Remotes
+git fetch origin  # Fetch from your fork
+git fetch upstream  # Fetch from original repo
+git fetch team-member  # Fetch from teammate's repo
+4. Pull a Specific Branch from a Different Remote
+git checkout -b feature-branch team-member/feature-branch
+5. Push Changes to a Different Remote
+git push origin feature-branch
+git push team-member feature-branch
+6. Remove a Remote (if needed)
+git remote remove team-member
+
+
+
+
+
+
+Example: Shallow Clone
+
+Step 1: Pick a repo to clone
+Let’s use a public repo (you can replace with your own):
+git clone --depth 1 https://github.com/jquery/jquery.git
+Clone only the latest commit of the jquery repo
+Skip all previous history
+Save disk space and clone time
+Step 2: Check the clone depth
+After cloning, run:
+cd jquery
+git log --oneline
+de2ecfc (grafted, HEAD -> main, origin/main, origin/HEAD) Build: Bump the github-actions group with 3 updates
+You’ll only see 1 commit.
+Step 3: Try fetching more history (optional)
+Let’s say now you want to deepen the clone to see the last 10 commits:
+git fetch --deepen=9
+This adds 9 more commits, making it a total of 10.
+Step 4: Full unshallow fetch (optional)
+If you now want the entire history, run:
+git fetch --unshallow
+Now your shallow clone becomes a full clone.
+
+
+
+Sparse checkout allows you to work with only specific directories or files instead of the entire repository.
+Sparse checkout allows you to checkout only a subset of files/folders in a Git repository, saving time, disk space, and bandwidth.
+Use Case:
+You want only a subset of files from a large repository.
+You need to work on specific directories without downloading everything.
+Commands:
+Enable sparse checkout:
+git sparse-checkout init
+Define the directories you need:
+git sparse-checkout set src/docs
+Pull only the selected directories:
+git pull origin main
+
+
+
+Go to your base folder
+git init
+Clone the repo with no checkout (only metadata)
+git clone --filter=blob:none --no-checkout https://github.com/github/gitignore.git
+--filter=blob:none:
+Prevents Git from downloading file contents (blobs) initially — only tree and commit metadata are fetched. This keeps the clone lightweight.
+--no-checkout:
+Tells Git not to checkout any files into your working directory yet. This is useful when you're about to use sparse checkout.
+At this point:
+You have a local copy of the repo metadata
+No files are visible in the working directory (yet)
+You're ready to selectively pull files using sparse checkout!
+Go into the directory
+cd gitignore
+
+
+
+
+Enable sparse checkout in simple “no cone mode”
+git sparse-checkout init --no-cone
+Use manual mode (non-cone mode)
+This is the most accurate way to get individual files
+--no-cone puts Git into manual sparse mode, allowing file-level control
+cat .git/info/sparse-checkout
+/*
+!/*/
+Verify Sparse Checkout Mode
+git config core.sparseCheckoutCone
+false
+Select specific files to checkout
+.git/info/sparse-checkout with direct file paths (no trailing slash) tells Git to include exactly those files
+echo -e "/Python.gitignore\n/Node.gitignore" > .git/info/sparse-checkout
+Or Edit .git/info/sparse-checkout in VS code and add:
+/Python.gitignore
+/Node.gitignore
+cat .git/info/sparse-checkout
+/Python.gitignore
+/Node.gitignore
