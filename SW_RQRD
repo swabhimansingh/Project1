@@ -1,0 +1,36 @@
+Software
+Purpose
+Download Link
+Git
+Version control system
+https://git-scm.com
+GitHub Account
+Code repository and collaboration
+https://github.com
+GitHub Desktop (Optional)
+GUI for GitHub
+https://desktop.github.com
+VS Code
+Code editor with Git integration
+https://code.visualstudio.com
+Husky (Optional)
+Git hook management
+npm install husky --save-dev
+Node.js (Optional)
+Required for Husky and GitHub Actions
+https://nodejs.org
+Jira (Optional)
+Issue tracking and project management
+https://www.atlassian.com/software/jira
+Python (Optional)
+GitHub API automation
+https://www.python.org
+Postman (Optional)
+API testing for GitHub integration
+https://www.postman.com
+Markdown Viewer
+Preview .md files
+Built into GitHub/VS Code
+GPG (Optional)
+Commit signing and encryption
+https://gnupg.org
