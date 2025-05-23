@@ -1,3 +1,4 @@
+
 Creating a GitHub Project:
 
 From a Repository:
@@ -39,3 +40,267 @@ Set status when label is added
 Example:
 Trigger: New Issue Created
 Action: Add to Project → Status: Backlog
+
+
+
+Keep status fields consistent (To do, In Progress, Done)
+Use filters to create custom views (e.g., issues assigned to "Alice")
+Link issues to milestones and PRs
+Use labels like bug, enhancement, urgent
+
+
+
+Example: GitHub Projects for Issue Tracking:
+GitHub Projects for Issue Tracking, using a Board view (Kanban-style)
+Creating & Using a GitHub Project Board:
+Step 1: Create a GitHub Project (Board View)
+Go to your GitHub repository (or organization).
+Click on the “Projects” tab (or go to https://github.com/orgs/YOUR-ORG/projects).
+https://github.com/monicag-gupta?tab=projects
+Click “New Project”.
+Choose “Board” as the layout template.
+Give it a name, e.g., Feature Tracker.
+Click “Create”.
+Done! You now have a project board with columns: To do, In progress, Done.
+
+
+Step 2: Add Issues to Your Project
+Option A: From the Issue Page
+Go to an issue in your repository.
+On the right sidebar, find “Projects”.
+Click the dropdown → Select your project board.
+The issue is now on the board under To do.
+Option B: From the Project Board
+Go to your project board.
+Click “+ Add item” under the desired column.
+You can:
+Paste an existing issue URL (e.g., #25)
+Search for issue titles
+Or create a new draft issue
+
+Step 3: Move Issues Between Columns
+1.	Click and drag the issue card from To do to In progress or Done.
+2.	Alternatively, click the item → Edit “Status” field (if using custom fields).
+This helps track work as it progresses.
+
+Step 4: Add Automation (Optional)
+Go to your project settings by clicking on the project name
+Click on right triple … and choose → “Workflow”.
+Choose an automation rule like:
+When issue is assigned → move to In Progress
+When PR is merged → move to Done
+Save the rules.
+Now the board updates automatically when actions occur!
+
+Step 5: Filter and Customize Views
+You can create filtered views:
+Click “+” New View
+Choose layout: Board, Table, or Timeline
+Add filters like:
+assignee:@me status:"In Progress"
+Rename columns or change visibility settings.
+
+
+.yml (YAML) files define automation workflows in your GitHub repository.
+These workflows can run tests, deploy code, send notifications, etc., when triggered by events like a push, pull request, or issue creation.
+The .yml files are stored inside:
+.github/workflows/
+Example:
+.github/workflows/deploy.yml
+
+
+Example: YML for a front end simple html project
+1. Create Local Project Folder
+mkdir MyWebProject
+cd MyWebProject
+2. Initialize Git and Set Remote Origin
+git init
+git remote add origin https://github.com/monicag-gupta/Repo4Yml.git
+3. Create Project Files:
+index.html
+style.css
+script.js
+
+
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Website</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Welcome to My Website</h1>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+style.css
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  text-align: center;
+}
+
+
+
+script.js
+console.log("Hello from script.js");
+
+
+
+4. Add Optional package.json (for Linting)
+npm init -y
+npm install eslint --save-dev
+Now update the "scripts" section in package.json:
+ "scripts": {
+    "lint": "eslint .",
+    "test": "echo \"No tests yet\" && exit 0",
+    "build": "echo \"Static site, nothing to build\""
+  },
+
+
+
+5. Create ESLint Config (Optional)
+npx eslint --init
+(Choose: "To check syntax only", "JavaScript modules (import/export)", etc.)
+6. Create CI Workflow File
+mkdir -p .github/workflows
+Create ci.yml in the folder: .github/workflows/ci.yml
+
+
+name: CI for Simple JS Website
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          else
+            echo "No package.json found. Skipping npm install."
+          fi
+
+      - name: Run linter (optional)
+        run: |
+          if [ -f package.json ]; then
+            npm run lint || echo "Lint failed"
+          fi
+
+      - name: Run tests (optional)
+        run: |
+          if [ -f package.json ]; then
+            npm test || echo "Tests failed"
+          fi
+
+      - name: Build website
+        run: |
+          echo "No build step needed for static site"
+
+
+
+
+
+
+7. Commit and Push All Files
+git add .
+git commit -m "Initial commit with CI workflow"
+git branch -M main
+git push -u origin main
+8. Check GitHub Actions
+1. Go to: https://github.com/monicag-gupta/Repo4Yml/actions
+2. See the CI for Simple JS Website workflow run automatically on push.
+
+
+
+
+Go to Github URL, Edit it: https://github.com/monicag-gupta/Repo4Yml/blob/main/.github/workflows/ci.yml
+
+name: CI for Simple JS Website
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+
+
+.YML : Explanation of Each Section:
+name: CI for Simple JS Website
+What it does: This is the display name of the workflow you'll see in the Actions tab.
+on:
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+What it does: Defines triggers.
+This runs the workflow whenever you push or open a pull request to the main branch.
+jobs:
+Contains one or more jobs. Each job is a group of steps.
+jobs:
+  build:
+Here, the job is named build.
+runs-on: ubuntu-latest
+Tells GitHub which virtual machine OS to use for this job. (ubuntu-latest is common and free)
+steps:
+Each job has multiple steps, executed in order.
+
+
+
+- name: Checkout code
+  uses: actions/checkout@v3
+What it does: Clones your repo into the runner so GitHub can access your files.
+- name: List project files
+  run: ls -la
+What it does: Lists all files in your repo (helps verify what's present).
+- name: Validate HTML files
+  run: |
+    echo "Running basic HTML validation"
+    grep -r "<html>" .
+What it does: Looks for <html> tags in your files to simulate HTML validation.
+- name: Run JS syntax check
+  run: |
+    echo "Simulating JS linting"
+    grep -r "function" .
+What it does: Searches for function keyword to simulate a JavaScript syntax check.
+- name: Done!
+  run: echo "CI pipeline complete ✅"
+Final step: Prints a success message after all previous steps run.
