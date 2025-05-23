@@ -1,4 +1,3 @@
-
 Add the remote and name it origin
 git remote add origin https://github.com/monicag-gupta/Prj1.git
 Now origin is created as the name for your remote repository.
@@ -29,3 +28,37 @@ Useful for debugging fetch/merge steps.
 Pull Unrelated Repos
 git pull origin main --allow-unrelated-histories
 Used when combining projects from different sources.
+
+
+Basic git push Command
+git push
+Pushes your committed changes to the default remote (origin) and the current branch.
+Push and set upstream:
+git push -u origin main
+-u or --set-upstream: Sets the default remote tracking for your branch.
+Force push 
+Overwrite remote:
+git push --force origin main
+--force will overwrite the remote branch no matter what — dangerous in shared repos.
+Safer force push:
+git push --force-with-lease origin main
+--force-with-lease ensures:
+You only overwrite the remote branch if it hasn’t changed since your last fetch.
+If someone else pushed to origin/main after you last fetched, your push will be rejected — to avoid accidentally wiping their changes.
+
+
+
+Delete a remote branch:
+git push origin --delete feature-branch
+Push tags:
+git push origin --tags
+Dry-run (just to test):
+git push --dry-run
+It tells you what would happen — like pushing the main branch — but nothing is actually pushed.
+Check Current Upstream Tracking
+git branch -vv
+is super useful — it shows all local branches along with:
+The tracking remote branch (if any)
+The last commit hash
+The latest commit message
+Whether the branch is ahead/behind its remote
