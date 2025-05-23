@@ -62,3 +62,276 @@ The tracking remote branch (if any)
 The last commit hash
 The latest commit message
 Whether the branch is ahead/behind its remote
+
+git push origin main:dev
+Push local main branch to remote dev branch.
+
+
+
+Example:
+git push -u origin main
+Enumerating objects: 9, done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (8/8), 880 bytes | 6.00 KiB/s, done.
+Total 8 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/monicag-gupta/NewRepoAris.git
+   b1a7a42..72e0d42  main -> main
+branch 'main' set up to track 'origin/main'.
+
+Now update files..
+git add .
+git commit -m "Initial commit"
+[main a7c2820] Initial commit
+ 2 files changed, 23 insertions(+)
+git push --dry-run
+To https://github.com/monicag-gupta/NewRepoAris.git
+   72e0d42..a7c2820  main -> main
+git push
+
+
+git clone
+Creates a local copy of a remote repository (including all branches, commits, tags, etc.).
+It’s used once to get the entire repo for the first time.
+Example:
+git clone https://github.com/monicag-gupta/NewRepoAris.git
+Result:
+A new directory is created.
+The full repo history and files are downloaded.
+origin is automatically set as the remote.
+Note that:
+clone = Downloading a full app for the first time.
+pull = Updating that app with the latest patch.
+Note :
+[GitHub repo] ==== clone ====> [Your computer]
+[GitHub repo] ====> pull ====> [Your computer]
+[Your computer] ====> push ====> [GitHub repo]
+
+
+
+git fetch Syntax
+git fetch [<options>] [<remote> [<refspec>...]]
+Fetch from origin
+git fetch origin
+Downloads new commits from origin/main
+Stores them in your local repo
+DOES NOT change your working files or branches
+Good for reviewing changes before merging
+Fetch all remotes
+git fetch --all
+
+Fetch and clean up stale branches
+git fetch --prune
+Simulate a fetch
+git fetch --dry-run
+Fetch tags only
+git fetch --tags
+Fetch with full details
+git fetch --verbose
+Shallow fetch (last 5 commits)
+git fetch --depth 5
+Combine Options
+git fetch --all --prune --verbose
+Fetch from all remotes, clean up old branches, and show detailed output.
+
+
+
+
+
+Fetch changes from origin
+git fetch origin
+Downloads updates from origin/main (the GitHub version of main)
+But does not merge them into your local main yet
+Compare local and remote
+git log HEAD..origin/main --oneline
+This shows the commits on origin/main that you don’t have locally yet.
+Merge if you’re ready
+git merge origin/main
+Or just use:
+git pull origin main
+...if you’re okay with fetching + merging together.
+Bonus Example with All-in-One
+git fetch --all --prune --verbose
+Fetches updates from all remotes
+Removes stale references to deleted remote branches
+Shows verbose output
+
+
+
+git fetch = Download new mail, but don’t open it
+git pull = Download + open + merge it into your current doc
+
+
+
+
+
+What is a Patch?
+A Git patch is a file that contains changes from one or more commits, allowing you to share, review, and apply changes without merging branches.
+
+Creating a Patch (git format-patch)
+You can create a patch file from the last N commits using:
+git format-patch -N
+Example: Create a patch file for the last 2 commits:
+git format-patch -2
+This generates files named like 0001-fix-bug.patch.
+To create a patch from a specific commit range:
+git format-patch <start-commit>..<end-commit>
+Example:
+git format-patch abc123..def456
+This generates patches for commits between abc123 and def456.
+
+
+Applying a Patch (git apply)
+To apply a patch file:
+git apply 0001-fix-bug.patch
+This applies the patch without committing the changes.
+Applying a Patch with History (git am)
+If you want to apply a patch and retain commit history, use:
+git am < 0001-fix-bug.patch
+Reverting a Patch
+If a patch was applied incorrectly, you can revert it:
+git apply -R 0001-fix-bug.patch
+
+
+Example: Patches in Git 
+
+Say, we have made some changes in a repository and want to share those changes as a patch instead of pushing them to a remote repository. 
+A patch is a file that contains differences between versions of files and can be applied later to reproduce the same changes.
+
+1. Create a sample file and commit it:
+Add example4patch.txt through VS Code. Add the content:
+Hello, Git Patches!
+Save the file
+git add example4patch.txt
+git commit -m "Initial commit with example4patch.txt"
+git push origin main
+
+
+
+For Applying a Patch in Another Repository
+Let’s assume you have another repository where you want to apply this patch.
+Create a second repository:
+cd ..
+mkdir GitEgs112
+cd GitEgs112
+git init
+create the example4patch.txt file like first repository in the second repository.
+
+git add example4patch.txt
+git commit -m "Added empty example4patch.txt before applying the patch"
+
+
+
+
+
+Go back to Original Repository
+cd ..\GitEgs111
+Make Changes and Generate a Patch
+Now, modify the file and create a patch:
+Now, modify example4patch.txt:
+Hello, Git Patches!
+This is an updated line in example4patch.txt.
+Save the file
+git add example4patch.txt
+git commit -m "Updated example4patch.txt with a new line"
+Generate a patch file:
+git format-patch -1 HEAD
+This creates a patch file named something like 0001-Updated-example4patch.txt-with-a-new-line.patch.
+The -1 flag means generating a patch for the last commit.
+Example:
+git format-patch -1 HEAD --stdout > 0001-Updated-example4patch.txt.patch
+To generate patches for the last three commits, use:
+git format-patch -3 HEAD
+
+
+
+Apply a Patch in Another Repository
+Go to the second repository:
+cd ..\GitEgs112
+
+Copy the patch file into this repository and apply it:
+cp ../ GitEgs111/0001-Updated-example4patch.txt-with-a-new-line.patch .
+copy ..\GitEgs111\0001-Updated-example4patch.txt.patch .
+git apply 0001-Updated-example4patch.txt.patch
+Check if the changes were applied:
+cat example4patch.txt
+Output:
+Hello, Git Patches!
+This is an updated line in example4patch.txt
+
+
+
+
+Applying a Patch with git am (Preserving Commit History)
+Go to the second repository:
+cd ..\GitEgs112
+Instead of git apply, you can use git am to preserve commit history:
+git am < 0001-Updated-example4patch.txt.patch
+This creates a new commit with the original commit message from the patch.
+Check if the changes were applied:
+cat example4patch.txt
+Output:
+Hello, Git Patches!
+This is an updated line in example4patch.txt
+
+
+Undoing an Applied Patch
+If you applied the patch incorrectly, you can revert the changes:
+git apply -R 0001-Updated-example4patch.txt.patch
+
+git am –abort : This will clear any failed patch attempts and reset git am so you can try again.
+git am --abort
+
+
+
+
+
+Forking is commonly used in open-source projects to create a personal copy of a repository for modifications before contributing back.
+Steps to Work with Forks & Upstream
+1. Fork the Repository
+Go to the repository on GitHub/GitLab and click Fork.
+This creates a personal copy under your account.
+2. Clone the Fork Locally
+git clone https://github.com/monicag-gupta/NewRepoAris.git
+Type : cd repo-name
+cd NewRepoAris
+3. Add the Upstream Repository (Original Source)
+git remote add upstream https://github.com/original-author/repo-name.git
+git remote add upstream https://github.com/monicag-gupta/NewRepoAris.git
+
+
+
+4. Verify the Remotes
+git remote -v
+Output Example:
+origin    https://github.com/your-username/repo-name.git (fetch)
+origin    https://github.com/your-username/repo-name.git (push)
+upstream  https://github.com/original-author/repo-name.git (fetch)
+upstream  https://github.com/original-author/repo-name.git (push)
+5. Sync Your Fork with Upstream Changes
+git fetch upstream
+git checkout main
+git merge upstream/main
+6. Push Changes Back to Your Fork
+git push origin main
+7. Submit a Pull Request (PR)
+Go to GitHub and click "Compare & pull request".
+Ensure it targets the correct upstream branch.
+Provide a clear description of the changes.
+
+
+
+Go to the original GitHub repository
+Example like: https://github.com/original-author/sample-project
+Example: 
+Login to your Github and reach to your repository
+https://github.com/monicag-gupta/gitAristrocat
+Create a fork for the repository
+OR:
+Go to a public repository:
+https://github.com/markdown-it/markdown-it.github.io
+Create a fork of it in your repository.
+Click the Fork button (top-right) to create a copy under your GitHub account.
+Your forked repository will be available at: https://github.com/your-username/sample-project
+Example:
+https://github.com/monicag-gupta/markdown-it.github.io
