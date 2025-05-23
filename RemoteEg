@@ -1,6 +1,6 @@
 
 Add the remote and name it origin
-git remote add origin https://github.com/monicag-gupta/gitAristrocat.git
+git remote add origin https://github.com/monicag-gupta/Prj1.git
 Now origin is created as the name for your remote repository.
 Verify it
 git remote -v
@@ -12,3 +12,20 @@ git remote set-url origin https://github.com/monicag-gupta/NewRepoAris.git
 If you need to remove and re-add
 git remote remove origin
 git remote add origin <new-url>
+
+
+Basic git pull Command
+git pull
+Fetches from the default remote (origin) and merges the current branch with the fetched changes.
+With Rebase Example
+git pull --rebase origin main
+Good for keeping a cleaner commit history (linear).
+With Fast-Forward Only
+git pull --ff-only
+Safer for CI/CD environments — avoids unintended merge commits.
+Verbose Output
+git pull --verbose
+Useful for debugging fetch/merge steps.
+Pull Unrelated Repos
+git pull origin main --allow-unrelated-histories
+Used when combining projects from different sources.
