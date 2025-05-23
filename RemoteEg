@@ -477,9 +477,6 @@ You're ready to selectively pull files using sparse checkout!
 Go into the directory
 cd gitignore
 
-
-
-
 Enable sparse checkout in simple “no cone mode”
 git sparse-checkout init --no-cone
 Use manual mode (non-cone mode)
@@ -500,3 +497,72 @@ Or Edit .git/info/sparse-checkout in VS code and add:
 cat .git/info/sparse-checkout
 /Python.gitignore
 /Node.gitignore
+
+
+read-tree -mu HEAD syncs the working directory with your sparse rules
+This command updates your working directory based on what you've configured in .git/info/sparse-checkout.
+git read-tree -mu HEAD
+-m: Perform a merge of trees (in this case, just applies the tree at HEAD)
+-u: Update the working directory to match the tree
+HEAD: Use the current commit reference (HEAD) to pull from
+It ensures: All unrelated files are removed. Only your selected files appear
+Output:
+remote: Enumerating objects: 2, done.
+remote: Counting objects: 100% (2/2), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 2 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Receiving objects: 100% (2/2), 2.49 KiB | 1.25 MiB/s, done.
+dir
+..
+-a----        05-04-2025     15:56           2141 Node.gitignore
+-a----        05-04-2025     15:56           3443 Python.gitignore
+
+
+
+Go to your base folder
+git init
+Clone the repo with no checkout (only metadata)
+git clone --filter=blob:none --no-checkout --sparse  https://github.com/github/gitignore.git
+--filter=blob:none:
+Prevents Git from downloading file contents (blobs) initially — only tree and commit metadata are fetched. This keeps the clone lightweight.
+--no-checkout:
+Tells Git not to checkout any files into your working directory yet. This is useful when you're about to use sparse checkout.
+At this point:
+You have a local copy of the repo metadata
+No files are visible in the working directory (yet)
+You're ready to selectively pull files using sparse checkout!
+Go into the directory
+cd gitignore
+
+Disable and Enable sparse checkout in simple “cone mode”
+git sparse-checkout disable
+git sparse-checkout init --cone
+Initializes sparse checkout in your Git repository.
+The --cone option enables cone mode, which is a simplified, faster, and recommended mode for sparse-checkout introduced in Git 2.25+.
+In cone mode, you can easily specify:
+Top-level files
+Entire directories
+Check the folders in the repository:
+git ls-tree -d --name-only HEAD
+.github
+Global
+community
+Include a Folder or Subfolder (in Cone Mode)
+Once you're in cone mode, you can include folders like this:
+git sparse-checkout set Global community
+These should be directory names inside the repo.
+
+
+Verify Sparse Checkout Mode
+git config core.sparseCheckoutCone
+true
+Edit, if not already edited : gitignore\.git\info\sparse-checkout file:
+Open gitignore\.git\info\sparse-checkout in vs code:
+/*
+!/*/
+/Global/
+/community/
+To see the folders, run:
+git checkout main
+This command updates your working directory based on what you've configured in .git/info/sparse-checkout.
+git read-tree -mu HEAD
