@@ -1,1 +1,96 @@
 
+Create Accounts
+For Jira Cloud in:
+https://www.atlassian.com/software/jira
+Once created, log in to the account.
+Then go to Settings
+Go to Apps
+Scroll down and click on More Apps.. Till we reach:
+Github for Jira
+Install it.
+
+
+Install github for Jira
+
+
+
+Authorize Jira to get connected with Github
+
+
+
+
+Confirm Integration : 
+Go to: Jira → Apps → Manage apps → GitHub for Jira
+You’ll see your connected repositories
+Use Smart Commits to Link Git to Jira:
+Create a New Branch for a Jira Issue
+Let's say your Jira issue key is PROJ-101
+git checkout -b feature/PROJ-101-login
+Commit with Smart Commit Message
+P1-2
+git commit -m "PROJ-101: Added login feature #comment login module done #time 2h #transition In Progress"
+This commit will:
+Link the commit to the Jira issue
+Add a comment to the issue
+Log 2 hours work
+Move the issue to "In Progress"
+Jira will automatically detect this if GitHub is integrated and Smart Commits are enabled.
+
+
+
+
+
+STEP 1: Sign up & Set up Jira (Cloud)
+Go to: https://www.atlassian.com/software/jira
+Click “Get it free” → Choose Jira Software (Cloud).
+Sign in with your email or Google account.
+Choose a project name and project type (Scrum/Kanban/Team-managed).
+Note your Jira URL:
+Example: https://your-company.atlassian.net
+STEP 2: Connect GitHub to Jira
+In Jira, go to:
+Settings → Apps → Explore More Apps
+Search for “GitHub for Jira”, click Install.
+Authorize with GitHub.
+Select the organization and repositories to connect.
+Now Jira is connected with GitHub
+Verify Smart Commits Are Active Automatically
+Once GitHub for Jira is connected:
+Smart Commits are enabled by default for those linked repositories.
+
+STEP 3: Create an Issue in Jira
+Click the “Create” button (top navbar)
+Fill details:
+Project: Your Jira project
+Issue type: Task/Bug/Story
+Summary: "Create login form"
+Click Create
+Note the issue key, e.g., PROJ-123
+STEP 4: Make a Code Change & Smart Commit in VS Code
+Create a file:
+echo "console.log('Hello Jira');" > index.js
+Add & commit with Smart Commit message:
+git add .
+git commit -m "PROJ-123: Added hello message #comment Initial commit #time 1h #transition In Progress"
+git push origin main
+Jira will:
+Show the commit in the issue under Development
+Log 1 hour in Time tracking
+Add your comment
+Change issue status to In Progress
+
+
+
+STEP 5: Verify in Jira
+Open the issue PROJ-123
+Scroll to Development panel:
+Commit should appear
+Your comment and time tracking should be visible
+Status should update to "In Progress" if #transition used
+
+Done! You now have:
+A Jira Cloud project
+GitHub repo linked
+Issues created
+Git working in VS Code
+Smart Commit working with Jira
