@@ -1,0 +1,204 @@
+You can sign the commits you make in a GitLab repository with a GPG (GNU Privacy Guard) key.
+GitLab uses the term GPG for all OpenPGP, PGP, and GPG-related material and implementations.
+If it's not already installed, install GPG:
+Windows: 
+Install Gpg4win by downloading the installer from:
+https://gpg4win.org/
+Although the website suggests a donation, it is completely optional. You can click “Download” and use it without donating.
+macOS:
+brew install gnupg
+Linux:
+sudo apt install gnupg
+
+
+Open cmd as Administrator:
+gpg --full-generate-key
+
+You’ll be prompted for:
+Key type: choose RSA and RSA (default)
+Key size: 4096 bits
+Key expiry: set as you wish (e.g., 1y)
+Real name and email (use the same email as your GitHub account)
+Passphrase: choose a secure one
+
+
+
+
+List your keys:
+gpg --list-secret-keys --keyid-format=long
+
+C:\Windows\system32>gpg --list-secret-keys --keyid-format=long
+
+gpg: checking the trustdb
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+gpg: next trustdb check due at 2026-04-07
+[keyboxd]
+---------
+sec   rsa4096/5EC4BCD7313A2261 2025-04-07 [SC] [expires: 2026-04-07]
+      C87BF162CFA92F44334615625EC4BCD7313A2261
+uid                 [ultimate] Monica Gupta (This is the GPG key generation) <gupta.monicag@gmail.com>
+ssb   rsa4096/0843DDAB16944B8C 2025-04-07 [E] [expires: 2026-04-07]
+
+
+
+Copy your public key:
+gpg --armor --export <GPG_KEY_ID>
+In line : (see previous command)
+sec   rsa4096/5EC4BCD7313A2261 2025-04-07 [SC] [expires: 2026-04-07]
+The GPG_KEY_ID is after the 1st / before space,
+
+gpg --armor --export 5EC4BCD7313A2261
+It will look like:
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+... (key content here)
+-----END PGP PUBLIC KEY BLOCK-----
+
+
+
+
+
+Go to GitHub 
+Login with your id
+Click on profile pic 
+Click on Settings 
+Choose SSH and GPG keys
+-> New GPG key
+
+Paste the entire key block from above
+Click Add GPG Key
+Confirm password
+
+
+
+To configure with signing key:
+git config --global user.signingkey <GPG_KEY_ID>
+git config --global user.signingkey 5EC4BCD7313A2261
+To auto-use GPG for all commits:
+git config --global commit.gpgsign true
+Specify the GPG program (especially on Windows):
+git config --global gpg.program "gpg"
+git config --global gpg.program "C:/Program Files (x86)/GnuPG/bin/gpg.exe"
+Use forward slashes
+If already not set:
+git config --global user.email "your_email@example.com"
+git config --global user.name "Your Name"
+git config --global user.name "Monica Gupta"
+git config --global user.email "gupta.monicag@gmail.com"
+List all configurations:
+git config list
+List what is loaded from where:
+git config --list --show-origin
+
+
+
+
+git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/monicag-gupta/newRepo.git
+cd your-repo
+cd newRepo
+echo "Test GPG commit" >> test.txt
+git add test.txt
+git commit -S -m "Add signed test commit"
+It will ask for passphrase, enter it and get the commit secured.
+
+
+
+To disable GPG signing globally:
+git config --global --unset commit.gpgsign
+Or, to set it explicitly to false:
+git config --global commit.gpgsign false
+To disable GPG signing for only the current repo:
+git config --unset commit.gpgsign
+Or:
+git config commit.gpgsign false
+Optionally Remove GPG Key Settings
+If you’ve previously set your GPG key manually, you can also unset it:
+git config --global --unset user.signingkey
+Optional: Remove GPG Key from GitHub (if added)
+Go to GitHub → Settings → SSH and GPG keys.
+Under the GPG Keys section, click Delete next to your key if you no longer want it stored.
+To Confirm It’s Disabled, Run:
+git config --global --list
+Make sure commit.gpgsign and user.signingkey are no longer present.
+
+
+
+
+Managing API Tokens :
+Generate a Personal Access Token (PAT) (for GitHub)
+
+Go to GitHub → Settings → Developer Settings → Personal Access Tokens.
+Click "Fine-grained token" or "Generate new token (classic)".
+Give Token Name: PAT_Token_monica
+Select scopes like:
+repo (for access to repositories)
+Generate and copy the token (you won't see it again!).
+
+Go to project folder, 
+git init
+git remote add origin https://github.com/monicag-gupta/RepoNew.git
+Usually in Windows the credentials are taken care of by git itself. Check if the manager is set:
+git config --list --show-origin | findstr "credential.helper"
+file:C:/Program Files/Git/etc/gitconfig credential.helper=manager
+If set, unset it to use PAT manually in push/pull (note that it cannot be unset in Windows OS):
+git config --global --unset credential.helper
+To set it back :
+git config --global credential.helper manager
+
+
+Enter some file/s:
+echo "Test GPG commit" >> test.txt
+git add test.txt
+git commit -m "Add PAT Github test commit“
+When you run git push or git pull, Git will prompt for your GitHub username and password. Enter:
+Username: your GitHub username
+Password: your Personal Access Token (PAT), not your GitHub password.
+Push the file in github:
+git push origin master
+
+
+
+
+Go to GitHub → Settings → Developer Settings → Personal Access Tokens.
+Click "Fine-grained token" or "Generate new token (classic)".
+Go to Token Name: PAT_Token_monica
+Click the 🗑️ Delete or Revoke button next to it.
+Select scopes like:
+repo (for access to repositories)
+Generate and copy the token (you won't see it again!).
+
+
+.gitignore tells Git to not track certain files like credentials, API keys, config files, logs, etc.
+Example .gitignore:
+# Ignore API keys, secrets, config
+.env
+config.json
+secrets.yml
+# Ignore logs
+*.log
+# Ignore IDE files
+.vscode/
+.idea/
+Once added to .gitignore, Git won’t track those files unless already committed earlier.
+
+To remove a tracked file that should be ignored:
+git rm --cached secrets.yml
+Then commit the change and the file will remain locally but not in the repo.
+
+
+
+When using GitHub Actions (CI/CD), you should store sensitive info like tokens, API keys in GitHub Secrets — not directly in your code.
+
+How to add a secret:
+Go to your GitHub repo
+Click on Settings > Secrets and variables > Actions > New repository secret
+Add a key-value pair (e.g., MY_API_KEY = abcd1234...)
+Access the secret in GitHub Actions workflow:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo secret
+        run: echo "Secret is ${{ secrets.MY_API_KEY }}"
+Secrets are encrypted, never exposed in logs, and cannot be accessed by pull requests from forks.
